@@ -217,3 +217,7 @@ __marimo__/
 
 # Individual VSCode settings
 .vscode/settings.json
+
+# Manual deployment ZIPs and artifacts
+*.zip
+src/requirements.txt
