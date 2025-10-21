@@ -1,9 +1,239 @@
 [project]
 name = "infusethink-backend"
 version = "0.1.0"
-description = "Add your description here"
+description = "Backend for Infuseth.ink (hobby project), built with ❤️ using FastAPI!"
 readme = "README.md"
 requires-python = ">=3.13"
+authors = [{ name = "Richard Michael Coo", email = "webmaster@infuseth.ink" }]
 dependencies = [
     "fastapi[standard-no-fastapi-cloud-cli]>=0.119.0",
+    "uvicorn>=0.22.0",
+    "gunicorn>=21.2.0",
 ]
+
+[tool.uv]
+dev-dependencies = [
+    "commitizen>=4.9.1",
+    "pre-commit>=4.3.0",
+    "ruff>=0.13.3",
+    "pyright>=1.1.406",
+    "cz-conventional-gitmoji>=0.7.0",
+    "pytest>=8.4.2",
+    "httpx>=0.27.0",
+]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+indent-width = 4
+
+# Include relevant file types
+include = ["*.py", "*.pyi", "*.pyw", "pyproject.toml"]
+
+# Use gitignore for intelligent exclusions
+respect-gitignore = true
+
+# Enable fix behavior by default
+fix = true
+
+# Show all fixed violations for transparency
+show-fixes = true
+
+[tool.ruff.lint]
+# Select comprehensive rule set for modern Python development
+select = [
+    # Pyflakes (F) - Essential error detection
+    "F",
+    # pycodestyle errors (E) - PEP 8 compliance
+    "E",
+    # pycodestyle warnings (W) - Additional style issues
+    "W",
+    # flake8-bugbear (B) - Likely bugs and design problems
+    "B",
+    # flake8-simplify (SIM) - Code simplification suggestions
+    "SIM",
+    # isort (I) - Import sorting and organization
+    "I",
+    # pyupgrade (UP) - Modern Python syntax upgrades
+    "UP",
+    # flake8-comprehensions (C4) - Better list/set/dict comprehensions
+    "C4",
+    # flake8-pie (PIE) - Miscellaneous improvements
+    "PIE",
+    # Ruff-specific rules (RUF) - Performance and style improvements
+    "RUF",
+]
+
+# Ignore some rules that are common in web apps
+ignore = [
+    # E501 handled by formatter for better line wrapping
+    "E501",
+    # Allow print statements for debugging
+    "T201",
+    # Allow TODO comments during development
+    "FIX002",
+]
+
+# Allow automatic fixes for most rules
+fixable = ["ALL"]
+
+# Prevent auto-fixing of potentially unsafe changes
+unfixable = [
+    # Never auto-remove unused imports in __init__.py (may be re-exports)
+    "F401",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Allow unused imports in __init__.py (common for re-exports)
+"__init__.py" = ["F401"]
+
+[tool.ruff.lint.isort]
+# Modern import sorting configuration
+combine-as-imports = true
+force-sort-within-sections = true
+split-on-trailing-comma = true
+
+# Import sections in logical order
+section-order = [
+    "future",
+    "standard-library",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
+
+# Recognize project structure
+known-first-party = ["infusethink"]
+
+[tool.ruff.format]
+# Modern Python formatting preferences
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+# Enable docstring code formatting for better documentation
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
+
+# Respect trailing commas for better git diffs
+skip-magic-trailing-comma = false
+
+[tool.commitizen]
+# Use conventional commits specification
+name = "cz_gitmoji"
+
+# Version management settings
+version_provider = "pyproject"
+update_changelog_on_bump = false
+version_scheme = "semver"
+
+# Conventional commit configuration
+bump_message = "bump: version $current_version → $new_version"
+tag_format = "v$version"
+
+# Generate changelog from conventional commits
+changelog_file = "CHANGELOG.md"
+changelog_start_rev = "v0.1.0"
+
+# Customize commit message format
+message_template = "{% raw %}{{change_type}}{% if scope %}({{scope}}){% endif %}: {{message}}{% endraw %}"
+
+[tool.pyright]
+# Target the same Python version as the project
+pythonVersion = "3.13"
+
+# Use your existing .venv for type checking
+venvPath = "."
+venv = ".venv"
+
+# Include only source code
+include = ["src"]
+
+# Exclude everything we don't want to type check
+exclude = [
+    "**/__pycache__",
+    "**/.pytest_cache",
+    "**/.mypy_cache",
+    "**/.ruff_cache",
+    "**/.git",
+    "**/node_modules",
+    "**/build",
+    "**/dist",
+    "**/.venv",
+    "**/venv",
+    "**/*.egg-info",
+    "**/.tox",
+    "**/.coverage",
+    "**/coverage.xml",
+    "**/htmlcov",
+    "**/.*",
+    "**/migrations",
+]
+
+# Ignore certain files that commonly have type issues
+ignore = ["**/.venv/**", "**/build/**", "**/dist/**"]
+
+# Report configuration
+reportMissingImports = true
+reportMissingTypeStubs = false
+reportUnusedImport = true
+reportUnusedClass = true
+reportUnusedFunction = true
+reportUnusedVariable = false
+reportDuplicateImport = true
+reportOptionalSubscript = true
+reportOptionalMemberAccess = true
+reportOptionalCall = true
+reportOptionalIterable = true
+reportOptionalContextManager = true
+reportOptionalOperand = true
+reportTypedDictNotRequiredAccess = false
+reportPrivateImportUsage = false
+reportConstantRedefinition = true
+reportIncompatibleMethodOverride = true
+reportIncompatibleVariableOverride = true
+reportInconsistentConstructor = false
+reportOverlappingOverloads = true
+reportMissingSuperCall = false
+reportUninitializedInstanceVariable = false
+reportInvalidStringEscapeSequence = true
+reportUnknownParameterType = false
+reportUnknownArgumentType = false
+reportUnknownLambdaType = false
+reportUnknownVariableType = false
+reportUnknownMemberType = false
+reportMissingParameterType = false
+reportMissingTypeArgument = false
+reportInvalidTypeVarUse = true
+reportCallInDefaultInitializer = false
+reportUnnecessaryIsInstance = true
+reportUnnecessaryCast = true
+reportUnnecessaryComparison = true
+reportUnnecessaryContains = true
+reportAssertAlwaysTrue = true
+reportSelfClsParameterName = true
+reportImplicitStringConcatenation = false
+reportUndefinedVariable = true
+reportUnboundVariable = true
+reportInvalidStubStatement = true
+reportIncompleteStub = true
+reportUnsupportedDunderAll = true
+reportUnusedCoroutine = true
+reportFunctionMemberAccess = true
+
+# Type checking mode - be more lenient for development
+typeCheckingMode = "basic"
+
+# Define Python platforms
+pythonPlatform = "All"
+
+# Executable path
+stubPath = "typings"
+
+# Analysis settings
+autoImportCompletions = true
+autoSearchPaths = true
+extraPaths = []
+
+# Use library code for unknown imports
+useLibraryCodeForTypes = true
