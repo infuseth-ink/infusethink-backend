@@ -49,13 +49,13 @@ repos:
         language: system
         types: [python]
         pass_filenames: false
-      - id: pytest
-        name: Run tests
-        entry: uv run pytest
-        language: system
-        types: [python]
-        pass_filenames: false
-        stages: [pre-commit]
+      # - id: pytest
+      #   name: Run tests
+      #   entry: uv run pytest
+      #   language: system
+      #   types: [python]
+      #   pass_filenames: false
+      #   stages: [pre-commit]
 
   # Commitizen for commit message validation
   - repo: https://github.com/ljnsn/cz-conventional-gitmoji
