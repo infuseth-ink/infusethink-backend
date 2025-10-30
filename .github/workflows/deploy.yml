@@ -1,0 +1,65 @@
+name: Deploy to Azure
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Generate requirements.txt
+        run: uv export --format requirements-txt --no-hashes --output-file requirements.txt
+
+      - name: Set GIT_SHA
+        run: echo "GIT_SHA=$(git rev-parse --short=7 HEAD)" >> $GITHUB_ENV
+
+      - name: Create deployment package
+        run: |
+          zip -r app.zip . \
+            -x "*.git*" \
+            -x "*__pycache__*" \
+            -x "*.pyc" \
+            -x ".venv/*" \
+            -x ".pytest_cache/*" \
+            -x "*.db" \
+            -x ".env" \
+            -x ".DS_Store"
+
+      - name: Set deployment target
+        id: target
+        run: |
+          case "${{ github.ref }}" in
+            refs/heads/main)
+              echo "resource_group=rg-infusethink-prod" >> $GITHUB_OUTPUT
+              echo "app_name=infusethink-api" >> $GITHUB_OUTPUT
+              ;;
+            refs/heads/dev)
+              echo "resource_group=rg-infusethink-dev" >> $GITHUB_OUTPUT
+              echo "app_name=infusethink-labs" >> $GITHUB_OUTPUT
+              ;;
+          esac
+
+      - name: Deploy to Azure
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ steps.target.outputs.app_name }}
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          package: app.zip
+        env:
+          GIT_SHA: ${{ env.GIT_SHA }}
