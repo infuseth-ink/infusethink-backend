@@ -11,14 +11,17 @@ class Settings(BaseSettings):
     Attributes:
         database_url: PostgreSQL connection string (required)
         debug: Enable debug mode with SQL query logging (default: False)
+        git_sha: Git commit SHA for deployment tracking (default: "unknown")
 
     Example .env file:
         DATABASE_URL=postgresql://user:password@localhost:5432/dbname
         DEBUG=false
+        GIT_SHA=abc1234
     """
 
     database_url: str
     debug: bool = False
+    git_sha: str | None = None
 
     model_config = SettingsConfigDict(env_file=".env")
 

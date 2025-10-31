@@ -1,8 +1,7 @@
-import os
-
 from fastapi import Depends, FastAPI
 from sqlmodel import Session, select
 
+from .config import get_settings
 from .database import get_session
 from .models import Greeting
 
@@ -11,8 +10,8 @@ app = FastAPI()
 
 @app.get("/")
 async def root():
-    git_sha = os.getenv("GIT_SHA", "unknown")
-    return {"message": "Hello World", "git_sha": git_sha}
+    settings = get_settings()
+    return {"message": "Hello World", "git_sha": settings.git_sha}
 
 
 @app.get("/greetings")
