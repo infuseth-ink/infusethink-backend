@@ -26,8 +26,8 @@ jobs:
       - name: Generate requirements.txt
         run: uv export --format requirements-txt --no-hashes --output-file requirements.txt
 
-      - name: Set GIT_SHA
-        run: echo "GIT_SHA=$(git rev-parse --short=7 HEAD)" >> $GITHUB_ENV
+      - name: Create build metadata
+        run: echo "GIT_SHA=$(git rev-parse --short=7 HEAD)" > .env
 
       - name: Create deployment package
         run: |
@@ -38,7 +38,6 @@ jobs:
             -x ".venv/*" \
             -x ".pytest_cache/*" \
             -x "*.db" \
-            -x ".env" \
             -x ".DS_Store"
 
       - name: Set deployment target
@@ -61,5 +60,3 @@ jobs:
           app-name: ${{ steps.target.outputs.app_name }}
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
           package: app.zip
-        env:
-          GIT_SHA: ${{ env.GIT_SHA }}
