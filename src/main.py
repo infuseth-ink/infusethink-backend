@@ -14,7 +14,7 @@ async def root():
     return {"message": "Hello World", "git_sha": settings.git_sha}
 
 
-@app.get("/greetings")
+@app.get("/greetings", response_model=list[Greeting])
 def get_greetings(session: Session = Depends(get_session)):
     """Get all greetings from the database.
 
@@ -24,6 +24,7 @@ def get_greetings(session: Session = Depends(get_session)):
     Returns:
         List of all greeting records
     """
+
     statement = select(Greeting)
     results = session.exec(statement)
     return results.all()
