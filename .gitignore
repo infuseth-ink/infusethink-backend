@@ -218,6 +218,9 @@ __marimo__/
 # Individual VSCode settings
 .vscode/settings.json
 
+# Generated dependency exports (not needed with Docker)
+requirements.txt
+
 # Manual deployment ZIPs and artifacts
 *.zip
 requirements.txt
