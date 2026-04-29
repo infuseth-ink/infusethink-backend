@@ -1,7 +1,7 @@
 from fastapi import Depends, FastAPI
 from sqlmodel import Session, select
 
-from .config import get_settings
+from .config import Settings, get_settings
 from .database import get_session
 from .models import Greeting
 
@@ -9,8 +9,7 @@ app = FastAPI()
 
 
 @app.get("/")
-async def root():
-    settings = get_settings()
+async def root(settings: Settings = Depends(get_settings)):
     return {"message": "Hello World", "git_sha": settings.git_sha}
 
 
