@@ -8,9 +8,9 @@ authors = [{ name = "Richard Michael Coo", email = "webmaster@infuseth.ink" }]
 dependencies = [
     "fastapi[standard-no-fastapi-cloud-cli]>=0.119.0",
     "gunicorn>=21.2.0",
-    "sqlmodel==0.0.27",
-    "alembic==1.17.0",
-    "psycopg[binary,pool]==3.2.11",
+    "sqlmodel==0.0.38",
+    "alembic==1.18.4",
+    "psycopg[binary,pool]==3.3.3",
     "pydantic-settings>=2.0.0",
 ]
 
