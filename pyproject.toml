@@ -23,6 +23,7 @@ dev-dependencies = [
     "cz-conventional-gitmoji>=0.7.0",
     "pytest>=8.4.2",
     "httpx>=0.27.0",
+    "pytest-spec>=6.0.0",
 ]
 
 [tool.ruff]
@@ -143,6 +144,10 @@ changelog_start_rev = "v0.1.0"
 # Customize commit message format
 message_template = "{% raw %}{{change_type}}{% if scope %}({{scope}}){% endif %}: {{message}}{% endraw %}"
 
+[tool.pytest.ini_options]
+addopts = "--spec"
+testpaths = ["tests"]
+
 [tool.pyright]
 # Target the same Python version as the project
 pythonVersion = "3.13"
@@ -151,8 +156,8 @@ pythonVersion = "3.13"
 venvPath = "."
 venv = ".venv"
 
-# Include only source code
-include = ["src"]
+# Include source code and tests
+include = ["src", "tests"]
 
 # Exclude everything we don't want to type check
 exclude = [
