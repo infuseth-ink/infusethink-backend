@@ -3,15 +3,32 @@
 from datetime import datetime
 from random import randint
 
-from pydantic import ConfigDict
+from pydantic import BaseModel, ConfigDict
 from sqlalchemy import DateTime, func
 from sqlmodel import Field, SQLModel
 
 
-class Greeting(SQLModel, table=True):
-    """Greeting table with auto-managed timestamps."""
+class AppBaseModel(BaseModel):
+    """
+    Base class for all SQLModel models in this application.
 
-    model_config = ConfigDict(use_attribute_docstrings=True)  # type: ignore[assignment]
+    Workaround from: https://github.com/fastapi/sqlmodel/discussions/855
+    """
+
+    model_config = ConfigDict(use_attribute_docstrings=True)
+
+
+class AppSQLModel(AppBaseModel, SQLModel):
+    """Base class for SQLModel models with common configuration.
+
+    This class inherits from both SQLModel and AppBaseModel to provide
+    consistent behavior across all models, including support for attribute
+    docstrings in the generated OpenAPI schema.
+    """
+
+
+class Greeting(AppSQLModel, table=True):
+    """Greeting table with auto-managed timestamps."""
 
     id: int | None = Field(default=None, primary_key=True)
     """Unique identifier for the greeting."""
