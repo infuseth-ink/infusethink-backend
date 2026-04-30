@@ -148,6 +148,10 @@ message_template = "{% raw %}{{change_type}}{% if scope %}({{scope}}){% endif %}
 addopts = "--spec"
 testpaths = ["tests"]
 
+# https://marketplace.visualstudio.com/items?itemName=jasonrudolph.significant-other
+python_files = ["*_test.py"] # Significant Other compatibility
+python_classes = ["*Test"] # mirrors the filename suffix convention
+
 [tool.pyright]
 # Target the same Python version as the project
 pythonVersion = "3.13"
