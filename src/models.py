@@ -10,7 +10,11 @@ from sqlmodel import Field, SQLModel
 
 class AppBaseModel(BaseModel):
     """
-    Base class for all SQLModel models in this application.
+    Shared Pydantic configuration base used by SQLModel-derived models.
+
+    This mixin supplies common Pydantic settings, such as support for
+    attribute docstrings. The concrete SQLModel base class is AppSQLModel,
+    which combines this configuration with SQLModel.
 
     Workaround from: https://github.com/fastapi/sqlmodel/discussions/855
     """
