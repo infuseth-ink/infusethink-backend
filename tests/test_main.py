@@ -1,22 +1,10 @@
-from fastapi.testclient import TestClient
-import pytest
-
-from src.main import app
-
-
 class TestNested:
-    class TestRoot:
-        @pytest.fixture(name="client")
-        def client_fixture(self):
-            yield TestClient(app)
+    class TestBuiltInFunction:
+        """THis is a dummy test, we don't usually test built-ins"""
 
-        def test_returns_200(self, client):
-            response = client.get("/")
-            assert response.status_code == 200
-
-        def test_includes_git_sha_in_response(self, client):
-            response = client.get("/")
-            assert "git_sha" in response.json()
+        def test_len(self):
+            """Does this override test descriptions?"""
+            assert len([1, 2, 3]) == 3
 
     class TestDummy:
         def test_addition(self):
