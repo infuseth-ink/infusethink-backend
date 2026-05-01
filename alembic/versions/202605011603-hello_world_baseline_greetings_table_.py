@@ -1,8 +1,8 @@
 """hello world baseline: greetings table (reference domain for future features)
 
-Revision ID: d6ba145beca7
+Revision ID: 3f4876d2a2dd
 Revises:
-Create Date: 2026-05-01 02:06:42.598173
+Create Date: 2026-05-01 16:03:37.428058
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "d6ba145beca7"
+revision: str = "3f4876d2a2dd"
 down_revision: str | None = None
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
