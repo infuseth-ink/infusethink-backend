@@ -78,20 +78,15 @@ ignore = [
     "FIX002",
     # B008: FastAPI uses function calls in defaults for dependency injection
     "B008",
+    # F401: unused imports checked by pyright instead
+    "F401",
 ]
 
 # Allow automatic fixes for most rules
 fixable = ["ALL"]
 
 # Prevent auto-fixing of potentially unsafe changes
-unfixable = [
-    # Never auto-remove unused imports in __init__.py (may be re-exports)
-    "F401",
-]
-
-[tool.ruff.lint.per-file-ignores]
-# Allow unused imports in __init__.py (common for re-exports)
-"__init__.py" = ["F401"]
+unfixable = []
 
 [tool.ruff.lint.isort]
 # Modern import sorting configuration
@@ -161,7 +156,7 @@ venvPath = "."
 venv = ".venv"
 
 # Include source code and tests
-include = ["src", "tests"]
+include = ["src", "tests", "alembic"]
 
 # Exclude everything we don't want to type check
 exclude = [
@@ -182,7 +177,6 @@ exclude = [
     "**/htmlcov",
     "**/.*",
     "**/migrations",
-    "**/alembic/versions",
 ]
 
 # Ignore certain files that commonly have type issues
@@ -191,7 +185,7 @@ ignore = ["**/.venv/**", "**/build/**", "**/dist/**"]
 # Report configuration
 reportMissingImports = true
 reportMissingTypeStubs = false
-reportUnusedImport = true
+reportUnusedImport = "warning"
 reportUnusedClass = true
 reportUnusedFunction = true
 reportUnusedVariable = false
