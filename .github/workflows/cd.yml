@@ -81,7 +81,7 @@ jobs:
               'DATABASE_URL=\$(aws secretsmanager get-secret-value --region $REGION --secret-id $SECRET_ID --query SecretString --output text)',
               'aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin ${{ steps.ecr.outputs.registry }}',
               'docker pull $IMAGE',
-              'docker run --rm -e DATABASE_URL=\"\$DATABASE_URL\" $IMAGE alembic upgrade head',
+              'docker run --rm --network host -e DATABASE_URL=\"\$DATABASE_URL\" $IMAGE alembic upgrade head',
               'docker stop backend || true',
               'docker rm backend || true',
               'docker run -d --name backend --restart unless-stopped -e DATABASE_URL=\"\$DATABASE_URL\" -e GIT_SHA=$SHORT_SHA -p 127.0.0.1:8000:8000 $IMAGE'
