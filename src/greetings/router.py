@@ -12,6 +12,6 @@ from .schemas import GreetingPublic
 router = APIRouter(prefix="/greetings", tags=["greetings"])
 
 
-@router.get("/", response_model=list[GreetingPublic])
+@router.get("", response_model=list[GreetingPublic])
 def get_greetings(session: Session = Depends(get_session)):
     return session.scalars(select(Greeting)).all()
