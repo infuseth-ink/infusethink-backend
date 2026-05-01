@@ -1,10 +1,10 @@
-"""Alembic environment configuration for SQLModel migrations."""
+"""Alembic environment configuration."""
+
+# pyright: reportUnusedImport=false
 
 from logging.config import fileConfig
 from pathlib import Path
 import sys
-
-from sqlmodel import SQLModel
 
 from alembic import context
 
@@ -12,7 +12,12 @@ from alembic import context
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from src.database import get_engine
-from src.models import Greeting  # noqa: F401  # type: ignore[reportUnusedImport]
+
+### DO NOT DELETE LINES HERE, THEY ARE NEEDED FOR ALEMBIC METADATA DISCOVERY ###
+from src.greetings.models import Greeting
+
+################################################################################
+from src.models import Base
 
 # this is the Alembic Config object
 config = context.config
@@ -21,8 +26,7 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# SQLModel metadata
-target_metadata = SQLModel.metadata
+target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:
