@@ -208,7 +208,7 @@ reportConstantRedefinition = true
 reportIncompatibleMethodOverride = true
 reportIncompatibleVariableOverride = true
 reportInconsistentConstructor = false
-reportOverlappingOverloads = true
+reportOverlappingOverload = true
 reportMissingSuperCall = false
 reportUninitializedInstanceVariable = false
 reportInvalidStringEscapeSequence = true
@@ -247,7 +247,6 @@ stubPath = "typings"
 
 # Analysis settings
 autoImportCompletions = true
-autoSearchPaths = true
 extraPaths = []
 
 # Use library code for unknown imports
