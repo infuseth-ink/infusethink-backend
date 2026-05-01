@@ -59,8 +59,3 @@ class Greeting(AppSQLModel, table=True):
     )
     """Timestamp when the greeting was last updated."""
 
-
-foo = "low"
-bar = randint(1, 100)
-
-foo = "high" if bar >= 50 else "low"
