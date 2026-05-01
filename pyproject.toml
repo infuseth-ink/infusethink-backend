@@ -3,7 +3,7 @@ name = "infusethink-backend"
 version = "0.1.0"
 description = "Backend for Infuseth.ink (hobby project), built with ❤️ using FastAPI!"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 authors = [{ name = "Richard Michael Coo", email = "webmaster@infuseth.ink" }]
 dependencies = [
     "fastapi[standard-no-fastapi-cloud-cli]>=0.119.0",
@@ -27,7 +27,7 @@ dev-dependencies = [
 ]
 
 [tool.ruff]
-target-version = "py313"
+target-version = "py314"
 line-length = 88
 indent-width = 4
 
@@ -149,7 +149,7 @@ python_classes = ["*Test"] # mirrors the filename suffix convention
 
 [tool.pyright]
 # Target the same Python version as the project
-pythonVersion = "3.13"
+pythonVersion = "3.14"
 
 # Use your existing .venv for type checking
 venvPath = "."
