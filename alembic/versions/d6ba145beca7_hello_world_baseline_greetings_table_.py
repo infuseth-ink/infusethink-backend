@@ -1,20 +1,19 @@
-"""Initial migration with greeting table
+"""hello world baseline: greetings table (reference domain for future features)
 
-Revision ID: 643b957b6530
+Revision ID: d6ba145beca7
 Revises:
-Create Date: 2025-10-24 01:00:45.286974
+Create Date: 2026-05-01 02:06:42.598173
 
 """
 
 from collections.abc import Sequence
 
 import sqlalchemy as sa
-import sqlmodel
 
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "643b957b6530"
+revision: str = "d6ba145beca7"
 down_revision: str | None = None
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
@@ -25,8 +24,8 @@ def upgrade() -> None:
     op.create_table(
         "greeting",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("greeting", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-        sa.Column("name", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("greeting", sa.String(), nullable=False),
+        sa.Column("name", sa.String(), nullable=False),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
