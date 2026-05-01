@@ -2,7 +2,8 @@
 
 from functools import lru_cache
 
-from sqlmodel import Session, create_engine
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 
 from .config import get_settings
 
@@ -12,7 +13,7 @@ def get_engine():
     """Get cached database engine.
 
     Returns:
-        Engine: SQLModel database engine
+        Engine: SQLAlchemy database engine
 
     Note:
         Uses lru_cache to create engine only once during app lifetime.
@@ -36,14 +37,13 @@ def get_session():
     """Dependency that provides a database session.
 
     Yields:
-        Session: SQLModel database session
+        Session: SQLAlchemy database session
 
     Example:
         @app.get("/items")
         def read_items(session: Session = Depends(get_session)):
-            items = session.exec(select(Item)).all()
+            items = session.scalars(select(Item)).all()
             return items
     """
-    engine = get_engine()
-    with Session(engine) as session:
+    with Session(get_engine()) as session:
         yield session

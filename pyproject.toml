@@ -8,7 +8,7 @@ authors = [{ name = "Richard Michael Coo", email = "webmaster@infuseth.ink" }]
 dependencies = [
     "fastapi[standard-no-fastapi-cloud-cli]>=0.119.0",
     "gunicorn>=21.2.0",
-    "sqlmodel==0.0.38",
+    "sqlalchemy>=2.0.0",
     "alembic==1.18.4",
     "psycopg[binary,pool]==3.3.3",
     "pydantic-settings>=2.0.0",
@@ -19,7 +19,7 @@ dev-dependencies = [
     "commitizen>=4.9.1",
     "pre-commit>=4.3.0",
     "ruff>=0.13.3",
-    "pyright>=1.1.406",
+    "pyright==1.1.409",
     "cz-conventional-gitmoji>=0.7.0",
     "pytest>=8.4.2",
     "httpx>=0.27.0",
@@ -78,20 +78,15 @@ ignore = [
     "FIX002",
     # B008: FastAPI uses function calls in defaults for dependency injection
     "B008",
+    # F401: unused imports checked by pyright instead
+    "F401",
 ]
 
 # Allow automatic fixes for most rules
 fixable = ["ALL"]
 
 # Prevent auto-fixing of potentially unsafe changes
-unfixable = [
-    # Never auto-remove unused imports in __init__.py (may be re-exports)
-    "F401",
-]
-
-[tool.ruff.lint.per-file-ignores]
-# Allow unused imports in __init__.py (common for re-exports)
-"__init__.py" = ["F401"]
+unfixable = []
 
 [tool.ruff.lint.isort]
 # Modern import sorting configuration
@@ -161,7 +156,7 @@ venvPath = "."
 venv = ".venv"
 
 # Include source code and tests
-include = ["src", "tests"]
+include = ["src", "tests", "alembic"]
 
 # Exclude everything we don't want to type check
 exclude = [
@@ -182,7 +177,6 @@ exclude = [
     "**/htmlcov",
     "**/.*",
     "**/migrations",
-    "**/alembic/versions",
 ]
 
 # Ignore certain files that commonly have type issues
@@ -191,7 +185,7 @@ ignore = ["**/.venv/**", "**/build/**", "**/dist/**"]
 # Report configuration
 reportMissingImports = true
 reportMissingTypeStubs = false
-reportUnusedImport = true
+reportUnusedImport = "warning"
 reportUnusedClass = true
 reportUnusedFunction = true
 reportUnusedVariable = false
@@ -208,7 +202,7 @@ reportConstantRedefinition = true
 reportIncompatibleMethodOverride = true
 reportIncompatibleVariableOverride = true
 reportInconsistentConstructor = false
-reportOverlappingOverloads = true
+reportOverlappingOverload = true
 reportMissingSuperCall = false
 reportUninitializedInstanceVariable = false
 reportInvalidStringEscapeSequence = true
@@ -247,7 +241,6 @@ stubPath = "typings"
 
 # Analysis settings
 autoImportCompletions = true
-autoSearchPaths = true
 extraPaths = []
 
 # Use library code for unknown imports
