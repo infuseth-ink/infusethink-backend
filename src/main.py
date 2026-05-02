@@ -14,7 +14,7 @@ def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
     schema = get_openapi(
-        title="infusethink API",
+        title="Infuseth.ink API",
         version="0.1.0",
         routes=app.routes,
     )
