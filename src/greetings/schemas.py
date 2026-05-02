@@ -23,3 +23,10 @@ class GreetingPublic(BaseModel):
     name: str
     created_at: datetime
     updated_at: datetime
+
+
+class GreetingListPublic(BaseModel):
+    items: list[GreetingPublic]
+    total: int
+    page: int
+    limit: int
