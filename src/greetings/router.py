@@ -30,7 +30,7 @@ def list_greetings(
 ):
     order = asc(Greeting.name) if sort == "asc" else desc(Greeting.name)
     base = select(Greeting)
-    total: int = session.scalar(select(func.count()).select_from(base.subquery())) or 0
+    total: int = session.scalar(select(func.count()).select_from(Greeting)) or 0
     offset = (pagination.page - 1) * pagination.limit
     if offset >= total > 0:
         raise HTTPException(
