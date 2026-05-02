@@ -1,6 +1,7 @@
 """Greetings router."""
 
 from dataclasses import dataclass
+import math
 from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
@@ -31,6 +32,12 @@ def list_greetings(
     base = select(Greeting)
     total: int = session.scalar(select(func.count()).select_from(base.subquery())) or 0
     offset = (pagination.page - 1) * pagination.limit
+    if offset >= total > 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Page {pagination.page} is out of range. "
+            f"Total pages: {math.ceil(total / pagination.limit)}",
+        )
     items = [
         GreetingPublic.model_validate(g)
         for g in session.scalars(
