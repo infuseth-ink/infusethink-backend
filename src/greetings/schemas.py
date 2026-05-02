@@ -5,6 +5,16 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 
 
+class GreetingCreate(BaseModel):
+    greeting: str
+    name: str
+
+
+class GreetingUpdate(BaseModel):
+    greeting: str | None = None
+    name: str | None = None
+
+
 class GreetingPublic(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
