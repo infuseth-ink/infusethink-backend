@@ -18,10 +18,28 @@ def custom_openapi():
         version="0.1.0",
         routes=app.routes,
     )
+    http_methods = {
+        "get",
+        "put",
+        "post",
+        "delete",
+        "options",
+        "head",
+        "patch",
+        "trace",
+    }
     for path in schema.get("paths", {}).values():
-        for operation in path.values():
+        if not isinstance(path, dict):
+            continue
+        for method, operation in path.items():
+            if method not in http_methods or not isinstance(operation, dict):
+                continue
             for response in operation.get("responses", {}).values():
+                if not isinstance(response, dict):
+                    continue
                 for content in response.get("content", {}).values():
+                    if not isinstance(content, dict):
+                        continue
                     content_schema = content.get("schema", {})
                     if content_schema.get("type") == "array":
                         content_schema.pop("title", None)
