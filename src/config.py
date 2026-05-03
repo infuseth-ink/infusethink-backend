@@ -36,5 +36,7 @@ class Settings(BaseSettings):
 
 @injectable
 def settings_factory() -> Settings:
-    """Create the Settings instance from environment variables."""
+    """Create the Settings instance from environment variables, necessary since Wireup things the
+    settings class needs database_url, debug, etc. as injectables, but we want to load those from
+    environment variables using Pydantic's BaseSettings."""
     return Settings()  # type: ignore[call-arg]
