@@ -3,7 +3,9 @@
 from datetime import datetime
 from typing import Annotated
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import Field, model_validator
+
+from src.schemas import AppBaseSchema
 
 # Single source of truth for field constraints shared across DTOs
 GreetingField = Annotated[str, Field(min_length=1, max_length=500)]
@@ -11,13 +13,13 @@ NameField = Annotated[str, Field(min_length=1, max_length=100)]
 EmojiField = Annotated[str, Field(min_length=1, max_length=10)]
 
 
-class GreetingCreate(BaseModel):
+class GreetingCreate(AppBaseSchema):
     greeting: GreetingField
     name: NameField
     emoji: EmojiField | None = None
 
 
-class GreetingUpdate(BaseModel):
+class GreetingUpdate(AppBaseSchema):
     # Nullable PATCH pattern — ref: https://apipark.com/techblog/en/fastapi-elegant-solutions-for-none-null-handling/
     #
     # The distinction between "unset" and "null" is preserved by using
@@ -46,9 +48,7 @@ class GreetingUpdate(BaseModel):
         return values
 
 
-class GreetingPublic(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
+class GreetingPublic(AppBaseSchema):
     id: int
     greeting: str
     name: str
@@ -57,7 +57,7 @@ class GreetingPublic(BaseModel):
     updated_at: datetime
 
 
-class GreetingListPublic(BaseModel):
+class GreetingListPublic(AppBaseSchema):
     items: list[GreetingPublic]
     total: int
     page: int
