@@ -5,7 +5,7 @@ from functools import lru_cache
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-from .config import get_settings
+from .config import Settings
 
 
 @lru_cache
@@ -18,7 +18,7 @@ def get_engine():
     Note:
         Uses lru_cache to create engine only once during app lifetime.
     """
-    settings = get_settings()
+    settings = Settings()  # type: ignore[call-arg]
 
     # SQLAlchemy defaults to psycopg2, but we have psycopg3 installed
     # Explicitly specify the driver for psycopg3
