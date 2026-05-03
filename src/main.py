@@ -6,6 +6,7 @@ import wireup
 from wireup import Injected
 import wireup.integration.fastapi
 
+from src.health_check.schemas import HealthCheckResponse
 from src.health_check.service import HealthCheckService
 
 from .config import settings_factory
@@ -64,7 +65,9 @@ async def scalar_docs() -> HTMLResponse:
 
 
 @app.get("/")
-async def root(health_check_service: Injected[HealthCheckService]):
+async def root(
+    health_check_service: Injected[HealthCheckService],
+) -> HealthCheckResponse:
     return await health_check_service.check()
 
 
