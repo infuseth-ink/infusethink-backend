@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     """
 
     database_url: str
-    """PostgreSQL connection string, e.g. postgresql+asyncpg://user:password@localhost:5432/dbname"""
+    """PostgreSQL connection string, e.g. postgresql+psycopg://user:password@localhost:5432/dbname"""
 
     debug: bool = False
     """Enable debug mode with SQL query logging (default: False)"""
