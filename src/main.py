@@ -1,11 +1,14 @@
-from fastapi import Depends, FastAPI
+from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import HTMLResponse
 from scalar_fastapi import get_scalar_api_reference
 import wireup
+from wireup import Injected
 import wireup.integration.fastapi
 
-from .config import Settings, get_settings
+from src.health_check.service import HealthCheckService
+
+from .config import settings_factory
 from .greetings.router import router as greetings_router
 
 app = FastAPI(docs_url=None, redoc_url=None)
@@ -61,8 +64,8 @@ async def scalar_docs() -> HTMLResponse:
 
 
 @app.get("/")
-async def root(settings: Settings = Depends(get_settings)):
-    return {"message": "Hello World", "git_sha": settings.git_sha}
+async def root(health_check_service: Injected[HealthCheckService]):
+    return await health_check_service.check()
 
 
 container = wireup.create_async_container(injectables=[])
