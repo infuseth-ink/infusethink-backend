@@ -68,6 +68,9 @@ async def scalar_docs() -> HTMLResponse:
 async def root(
     health_check_service: Injected[HealthCheckService],
 ) -> HealthCheckResponse:
+    """Health check endpoint that returns hardcoded "OK" status for HTTP and DB for now, along
+    with the Git SHA from settings for deployment tracking.
+    """
     return await health_check_service.check()
 
 
