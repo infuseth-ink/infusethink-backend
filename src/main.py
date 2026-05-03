@@ -68,5 +68,7 @@ async def root(health_check_service: Injected[HealthCheckService]):
     return await health_check_service.check()
 
 
-container = wireup.create_async_container(injectables=[])
+container = wireup.create_async_container(
+    injectables=[settings_factory, HealthCheckService]
+)
 wireup.integration.fastapi.setup(container, app)
