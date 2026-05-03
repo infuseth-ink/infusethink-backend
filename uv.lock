@@ -409,6 +409,7 @@ dependencies = [
     { name = "pydantic-settings" },
     { name = "scalar-fastapi" },
     { name = "sqlalchemy" },
+    { name = "wireup" },
 ]
 
 [package.dev-dependencies]
@@ -432,6 +433,7 @@ requires-dist = [
     { name = "pydantic-settings", specifier = ">=2.0.0" },
     { name = "scalar-fastapi", specifier = ">=1.8.2" },
     { name = "sqlalchemy", specifier = ">=2.0.0" },
+    { name = "wireup", specifier = ">=2.10.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -1141,6 +1143,18 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/c2/b6/b9afed2afadddaf5ebb2afa801abf4b0868f42f8539bfe4b071b5266c9fe/websockets-16.0-cp314-cp314t-win32.whl", hash = "sha256:5a4b4cc550cb665dd8a47f868c8d04c8230f857363ad3c9caf7a0c3bf8c61ca6", size = 178085, upload-time = "2026-01-10T09:23:33.816Z" },
     { url = "https://files.pythonhosted.org/packages/9f/3e/28135a24e384493fa804216b79a6a6759a38cc4ff59118787b9fb693df93/websockets-16.0-cp314-cp314t-win_amd64.whl", hash = "sha256:b14dc141ed6d2dde437cddb216004bcac6a1df0935d79656387bd41632ba0bbd", size = 178531, upload-time = "2026-01-10T09:23:35.016Z" },
     { url = "https://files.pythonhosted.org/packages/6f/28/258ebab549c2bf3e64d2b0217b973467394a9cea8c42f70418ca2c5d0d2e/websockets-16.0-py3-none-any.whl", hash = "sha256:1637db62fad1dc833276dded54215f2c7fa46912301a24bd94d45d46a011ceec", size = 171598, upload-time = "2026-01-10T09:23:45.395Z" },
+]
+
+[[package]]
+name = "wireup"
+version = "2.10.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ee/a0/2b4c04b030ba22bb5b75ffc2b8d077b7cb5635397160070551df2d05d3cf/wireup-2.10.0.tar.gz", hash = "sha256:0913de3002872b8e68848d9ea7ab7bc45c2c4bf5a63c6fc35e181df286082a2e", size = 791102, upload-time = "2026-04-29T21:21:18.512Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2a/d4/83d79633b96f9784a1f0c1ffa728aaf05e9760dc781158c1f00292600081/wireup-2.10.0-py3-none-any.whl", hash = "sha256:252368a254010986ee89919087f9610c44f8fdf4753961bbb60d242dadbdfe5f", size = 58085, upload-time = "2026-04-29T21:21:19.977Z" },
 ]
 
 [[package]]
