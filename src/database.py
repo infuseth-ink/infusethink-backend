@@ -20,8 +20,7 @@ def get_engine():
     """
     settings = Settings()  # type: ignore[call-arg]
 
-    # SQLAlchemy defaults to psycopg2, but we have psycopg3 installed
-    # Explicitly specify the driver for psycopg3
+    # remove in SQLAlchemy 2.1 as this driver bocomes the default for postgresql:// URLs
     url = settings.database_url.replace("postgresql://", "postgresql+psycopg://")
 
     return create_engine(
