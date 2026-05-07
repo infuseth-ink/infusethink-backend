@@ -13,8 +13,6 @@ from wireup.integration.fastapi import WireupRoute
 from .models import Greeting
 from .schemas import GreetingCreate, GreetingListPublic, GreetingPublic, GreetingUpdate
 
-router = APIRouter(prefix="/greetings", tags=["greetings"])
-
 
 class PaginationParams(BaseModel):
     page: int = Field(default=1, ge=1)
