@@ -1,48 +1,30 @@
 """Database configuration and session management."""
 
-from functools import lru_cache
+from collections.abc import AsyncIterator
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
+from wireup import injectable
 
 from .config import Settings
 
 
-@lru_cache
-def get_engine():
-    """Get cached database engine.
-
-    Returns:
-        Engine: SQLAlchemy database engine
-
-    Note:
-        Uses lru_cache to create engine only once during app lifetime.
-    """
-    settings = Settings()  # type: ignore[call-arg]
-
-    # remove in SQLAlchemy 2.1 as this driver bocomes the default for postgresql:// URLs
+@injectable
+def get_engine(settings: Settings) -> AsyncEngine:
     url = settings.database_url.replace("postgresql://", "postgresql+psycopg://")
-
-    return create_engine(
+    return create_async_engine(
         url,
-        echo=settings.debug,  # Log SQL queries when debug=True
-        pool_pre_ping=True,  # Verify connections before using them
-        pool_size=5,  # Number of connections to maintain
-        max_overflow=10,  # Max connections beyond pool_size
+        echo=settings.debug,
+        pool_pre_ping=True,
+        pool_size=5,
+        max_overflow=10,
     )
 
 
-def get_session():
-    """Dependency that provides a database session.
-
-    Yields:
-        Session: SQLAlchemy database session
-
-    Example:
-        @app.get("/items")
-        def read_items(session: Session = Depends(get_session)):
-            items = session.scalars(select(Item)).all()
-            return items
-    """
-    with Session(get_engine()) as session:
-        yield session
+@injectable(lifetime="scoped")
+async def get_session(engine: AsyncEngine) -> AsyncIterator[AsyncSession]:
+    async with AsyncSession(engine) as session:
+        try:
+            yield session
+        except Exception:
+            await session.rollback()
+            raise
