@@ -11,6 +11,7 @@ from alembic import context
 # Add src to Python path
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
+from src.config import Settings
 from src.database import get_engine
 
 ### DO NOT DELETE LINES HERE, THEY ARE NEEDED FOR ALEMBIC METADATA DISCOVERY ###
@@ -58,7 +59,7 @@ def run_migrations_online() -> None:
     In this scenario we need to create an Engine
     and associate a connection with the context.
     """
-    connectable = get_engine()
+    connectable = get_engine(Settings())  # type: ignore[call-arg]
 
     with connectable.connect() as connection:
         context.configure(connection=connection, target_metadata=target_metadata)

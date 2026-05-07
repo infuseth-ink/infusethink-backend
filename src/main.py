@@ -6,14 +6,14 @@ import wireup
 from wireup import Injected
 import wireup.integration.fastapi
 
+from src.greetings.controller import GreetingController
 from src.health_check.schemas import HealthCheckResponse
 from src.health_check.service import HealthCheckService
 
 from .config import settings_factory
-from .greetings.router import router as greetings_router
+from .database import get_engine, get_session
 
 app = FastAPI(docs_url=None, redoc_url=None)
-app.include_router(greetings_router)
 
 
 def custom_openapi():
@@ -75,6 +75,8 @@ async def root(
 
 
 container = wireup.create_async_container(
-    injectables=[settings_factory, HealthCheckService]
+    injectables=[settings_factory, HealthCheckService, get_engine, get_session]
 )
-wireup.integration.fastapi.setup(container, app)
+wireup.integration.fastapi.setup(
+    container, app, class_based_handlers=[GreetingController]
+)
