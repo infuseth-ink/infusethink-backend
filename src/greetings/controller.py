@@ -6,7 +6,7 @@ from typing import Annotated, Literal
 from fastapi import APIRouter, HTTPException, Query, status
 from pydantic import BaseModel, Field
 from sqlalchemy import asc, desc, func, select
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from wireup import Injected
 from wireup.integration.fastapi import WireupRoute
 
@@ -29,13 +29,15 @@ class GreetingController:
     @router.get("", response_model=GreetingListPublic)
     async def list_greetings(
         self,
-        session: Injected[Session],
+        session: Injected[AsyncSession],
         pagination: Annotated[PaginationParams, Query()] = PaginationParams(),
         sort: Annotated[Literal["asc", "desc"], Query()] = "asc",
     ):
         order = asc(Greeting.name) if sort == "asc" else desc(Greeting.name)
         base = select(Greeting)
-        total: int = session.scalar(select(func.count()).select_from(Greeting)) or 0
+        total: int = (
+            await session.scalar(select(func.count()).select_from(Greeting)) or 0
+        )
         offset = (pagination.page - 1) * pagination.limit
         if offset >= total > 0:
             raise HTTPException(
@@ -43,27 +45,27 @@ class GreetingController:
                 detail=f"Page {pagination.page} is out of range. "
                 f"Total pages: {math.ceil(total / pagination.limit)}",
             )
-        items = [
-            GreetingPublic.model_validate(g)
-            for g in session.scalars(
-                base.order_by(order).offset(offset).limit(pagination.limit)
-            ).all()
-        ]
+        result = await session.scalars(
+            base.order_by(order).offset(offset).limit(pagination.limit)
+        )
+        items = [GreetingPublic.model_validate(g) for g in result.all()]
         return GreetingListPublic(
             items=items, total=total, page=pagination.page, limit=pagination.limit
         )
 
     @router.post("", response_model=GreetingPublic, status_code=status.HTTP_201_CREATED)
-    async def create_greeting(self, body: GreetingCreate, session: Injected[Session]):
+    async def create_greeting(
+        self, body: GreetingCreate, session: Injected[AsyncSession]
+    ):
         greeting = Greeting(**body.model_dump())
         session.add(greeting)
-        session.commit()
-        session.refresh(greeting)
+        await session.commit()
+        await session.refresh(greeting)
         return greeting
 
     @router.get("/{greeting_id}", response_model=GreetingPublic)
-    def get_greeting(self, greeting_id: int, session: Injected[Session]):
-        greeting = session.get(Greeting, greeting_id)
+    async def get_greeting(self, greeting_id: int, session: Injected[AsyncSession]):
+        greeting = await session.get(Greeting, greeting_id)
         if not greeting:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Greeting not found"
@@ -75,25 +77,25 @@ class GreetingController:
         self,
         greeting_id: int,
         body: GreetingUpdate,
-        session: Injected[Session],
+        session: Injected[AsyncSession],
     ):
-        greeting = session.get(Greeting, greeting_id)
+        greeting = await session.get(Greeting, greeting_id)
         if not greeting:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Greeting not found"
             )
         for field, value in body.model_dump(exclude_unset=True).items():
             setattr(greeting, field, value)
-        session.commit()
-        session.refresh(greeting)
+        await session.commit()
+        await session.refresh(greeting)
         return greeting
 
     @router.delete("/{greeting_id}", status_code=status.HTTP_204_NO_CONTENT)
-    async def delete_greeting(self, greeting_id: int, session: Injected[Session]):
-        greeting = session.get(Greeting, greeting_id)
+    async def delete_greeting(self, greeting_id: int, session: Injected[AsyncSession]):
+        greeting = await session.get(Greeting, greeting_id)
         if not greeting:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Greeting not found"
             )
-        session.delete(greeting)
-        session.commit()
+        await session.delete(greeting)
+        await session.commit()

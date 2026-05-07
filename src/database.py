@@ -1,19 +1,17 @@
 """Database configuration and session management."""
 
-from collections.abc import Iterator
+from collections.abc import AsyncIterator
 
-from sqlalchemy import Engine, create_engine
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from wireup import injectable
 
 from .config import Settings
 
 
 @injectable
-def get_engine(settings: Settings) -> Engine:
-    # remove in SQLAlchemy 2.1 as this driver becomes the default for postgresql:// URLs
+def get_engine(settings: Settings) -> AsyncEngine:
     url = settings.database_url.replace("postgresql://", "postgresql+psycopg://")
-    return create_engine(
+    return create_async_engine(
         url,
         echo=settings.debug,
         pool_pre_ping=True,
@@ -23,12 +21,10 @@ def get_engine(settings: Settings) -> Engine:
 
 
 @injectable(lifetime="scoped")
-def get_session(engine: Engine) -> Iterator[Session]:
-    session = Session(engine)
-    try:
-        yield session
-    except Exception:
-        session.rollback()
-        raise
-    finally:
-        session.close()
+async def get_session(engine: AsyncEngine) -> AsyncIterator[AsyncSession]:
+    async with AsyncSession(engine) as session:
+        try:
+            yield session
+        except Exception:
+            await session.rollback()
+            raise

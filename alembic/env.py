@@ -6,13 +6,14 @@ from logging.config import fileConfig
 from pathlib import Path
 import sys
 
+from sqlalchemy import create_engine
+
 from alembic import context
 
 # Add src to Python path
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from src.config import Settings
-from src.database import get_engine
 
 ### DO NOT DELETE LINES HERE, THEY ARE NEEDED FOR ALEMBIC METADATA DISCOVERY ###
 from src.greetings.models import Greeting
@@ -54,16 +55,13 @@ def run_migrations_offline() -> None:
 
 
 def run_migrations_online() -> None:
-    """Run migrations in 'online' mode.
-
-    In this scenario we need to create an Engine
-    and associate a connection with the context.
-    """
-    connectable = get_engine(Settings())  # type: ignore[call-arg]
+    """Run migrations in 'online' mode."""
+    settings = Settings()  # type: ignore[call-arg]
+    url = settings.database_url.replace("postgresql://", "postgresql+psycopg://")
+    connectable = create_engine(url)
 
     with connectable.connect() as connection:
         context.configure(connection=connection, target_metadata=target_metadata)
-
         with context.begin_transaction():
             context.run_migrations()
 
